@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package car
+package diamond
 
 import (
 	"archive/tar"
@@ -36,7 +36,7 @@ func download(path string) (string, error) {
 
 		var tmp *os.File
 		var err error
-		tmp, err = ioutil.TempFile("", "car")
+		tmp, err = ioutil.TempFile("", "diamond")
 		if err != nil {
 			return "", fmt.Errorf("Error creating temporary file: %s", err)
 		}
@@ -62,7 +62,7 @@ func download(path string) (string, error) {
 
 // WritePackage satisfies the platform interface for generating a docker package
 // that encapsulates the environment for a CAR based chaincode
-func (carPlatform *Platform) WritePackage(spec *pb.ChaincodeSpec, tw *tar.Writer) error {
+func (diamondPlatform *Platform) WritePackage(spec *pb.ChaincodeSpec, tw *tar.Writer) error {
 
 	path, err := download(spec.ChaincodeID.Path)
 	if err != nil {
@@ -77,9 +77,9 @@ func (carPlatform *Platform) WritePackage(spec *pb.ChaincodeSpec, tw *tar.Writer
 	var buf []string
 
 	//let the executable's name be chaincode ID's name
-	buf = append(buf, cutil.GetDockerfileFromConfig("chaincode.car.Dockerfile"))
-	buf = append(buf, "COPY package.car /tmp/package.car")
-	buf = append(buf, fmt.Sprintf("RUN chaintool buildcar /tmp/package.car -o $GOPATH/bin/%s && rm /tmp/package.car", spec.ChaincodeID.Name))
+	buf = append(buf, cutil.GetDockerfileFromConfig("chaincode.diamond.Dockerfile"))
+	buf = append(buf, "COPY package.car /tmp/package.diamond")
+	buf = append(buf, fmt.Sprintf("RUN chaintool buildcar /tmp/package.diamond -o $GOPATH/bin/%s && rm /tmp/package.car", spec.ChaincodeID.Name))
 
 	dockerFileContents := strings.Join(buf, "\n")
 	dockerFileSize := int64(len([]byte(dockerFileContents)))
@@ -89,7 +89,7 @@ func (carPlatform *Platform) WritePackage(spec *pb.ChaincodeSpec, tw *tar.Writer
 	tw.WriteHeader(&tar.Header{Name: "Dockerfile", Size: dockerFileSize, ModTime: zeroTime, AccessTime: zeroTime, ChangeTime: zeroTime})
 	tw.Write([]byte(dockerFileContents))
 
-	err = cutil.WriteFileToPackage(path, "package.car", tw)
+	err = cutil.WriteFileToPackage(path, "package.diamond", tw)
 	if err != nil {
 		return err
 	}

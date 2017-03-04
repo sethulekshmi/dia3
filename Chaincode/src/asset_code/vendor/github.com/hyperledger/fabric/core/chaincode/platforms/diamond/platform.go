@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package car
+package diamond
 
 import (
 	pb "github.com/hyperledger/fabric/protos"
@@ -27,6 +27,6 @@ type Platform struct {
 // ValidateSpec validates the chaincode specification for CAR types to satisfy
 // the platform interface.  This chaincode type currently doesn't
 // require anything specific so we just implicitly approve any spec
-func (carPlatform *Platform) ValidateSpec(spec *pb.ChaincodeSpec) error {
+func (diamondPlatform *Platform) ValidateSpec(spec *pb.ChaincodeSpec) error {
 	return nil
 }
