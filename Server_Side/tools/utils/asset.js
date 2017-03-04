@@ -12,17 +12,16 @@ class Asset {
 
     create(userId) {
         let securityContext = this.usersToSecurityContext[userId];
-        let assetID = Asset.newassetID();
+        let assetID = Asset.newAssetID();
 
-        return this.doesassetIDExist(userId, assetID)
+        return this.doesAssetIDExist(userId, assetID)
         .then(function() {
-			let tem=Util.invokeChaincode(securityContext, 'create_diamond', [ assetID ]);
-			console.log('[#] Asset created',tem);
-            return tem
+			return Util.invokeChaincode(securityContext, 'create_asset', [ assetID ])
             .then(function() {
-				console.log('[#] Asset created id',assetID);
+            
+				
            
-                return assetID;
+              return assetID;
             });
         });
     }
@@ -32,20 +31,17 @@ class Asset {
     }
 
     updateAttribute(userId, functionName, value, assetID) {
-		console.log("#user securityContext userId",userId);
-		console.log("############################");
-		
-		
-        let securityContext = this.usersToSecurityContext[userId];
+		 let securityContext = this.usersToSecurityContext[userId];
         return Util.invokeChaincode(securityContext, functionName, [ value, assetID ]);
+		
     }
 
-    doesassetIDExist(userId, assetID) {
+    doesAssetIDExist(userId, assetID) {
         let securityContext = this.usersToSecurityContext[userId];
-        return Util.queryChaincode(securityContext, 'check_unique_asset', [ assetID ]);
+        return Util.queryChaincode(securityContext, 'check_unique_assetID', [ assetID ]);
     }
 
-    static newassetID() {
+    static newAssetID() {
         let numbers = '1234567890';
         let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         let assetID = '';
